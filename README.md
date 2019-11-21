@@ -1,4 +1,4 @@
 # SwiftStore
 Lightweight Caching Library
 
-[Logo](./swiftStoreLogo@2x.png)
+![Logo](./SwiftStoreLogo@2x.png)
