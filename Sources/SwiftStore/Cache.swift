@@ -1,6 +1,6 @@
 import Foundation
 
-final class Cache<Key: Hashable, Value> {
+final public class Cache<Key: Hashable, Value> {
   private let wrapped = NSCache<WrappedKey, Entry>()
   private let dateProvider: () -> Date
   private let entryLifetime: TimeInterval
@@ -155,7 +155,7 @@ private extension Cache {
 extension Cache.Entry: Codable where Key: Codable, Value: Codable {}
 
 extension Cache: Codable where Key: Codable, Value: Codable {
-  convenience init(from decoder: Decoder) throws {
+  convenience public init(from decoder: Decoder) throws {
     self.init()
     
     let container = try decoder.singleValueContainer()
@@ -163,7 +163,7 @@ extension Cache: Codable where Key: Codable, Value: Codable {
     entries.forEach(insert)
   }
   
-  func encode(to encoder: Encoder) throws {
+  public func encode(to encoder: Encoder) throws {
     var container = encoder.singleValueContainer()
     try container.encode(keyTracker.keys.compactMap(entry))
   }
