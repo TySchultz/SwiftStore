@@ -46,17 +46,16 @@ final class CacheTests: XCTestCase {
 
   func testSavingMultipleValues() {
     // Given
-    let first = MockedTestObject()
+    let first  = MockedTestObject()
     let second = MockedTestObject.modifiedObject(id: "second")
-
-    let store = Cache<String,MockedTestObject>()
+    let store  = Cache<String,MockedTestObject>()
 
     // When
     store.insert(first, forKey: first.id)
     store.insert(second, forKey: second.id)
 
     // Then
-    let firstResult = store[first.id]
+    let firstResult  = store[first.id]
     let secondResult = store[second.id]
     XCTAssertEqual(firstResult, first)
     XCTAssertEqual(secondResult, second)
@@ -66,8 +65,7 @@ final class CacheTests: XCTestCase {
     // Given
     let first  = MockedTestObject()
     let second = MockedTestObject.modifiedObject(count: 1)
-
-    let store = Cache<String,MockedTestObject>()
+    let store  = Cache<String,MockedTestObject>()
 
     // When
     store.insert(first, forKey: first.id)
@@ -93,8 +91,7 @@ final class CacheTests: XCTestCase {
   func testEntryExpired(){
     // Given
     let object = MockedTestObject()
-
-    let store = Cache<String,MockedTestObject>(entryLifetime: -100)
+    let store  = Cache<String,MockedTestObject>(entryLifetime: -100)
 
     // When
     store.insert(object, forKey: object.id)
@@ -106,7 +103,7 @@ final class CacheTests: XCTestCase {
 
   func testEmptyValue() {
     // Given
-    let key = "first"
+    let key   = "first"
     let store = Cache<String,MockedTestObject>()
 
     // When
@@ -124,7 +121,7 @@ final class CacheTests: XCTestCase {
   func testRemoveValue() {
     // Given
     let object = MockedTestObject()
-    let store = Cache<String,MockedTestObject>()
+    let store  = Cache<String,MockedTestObject>()
 
     // When
     store.insert(object, forKey: object.id)

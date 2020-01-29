@@ -9,10 +9,10 @@ final public class Cache<Key: Hashable, Value> {
   public init(dateProvider: @escaping () -> Date = Date.init,
        entryLifetime: TimeInterval = 12 * 60 * 60,
        maximumEntryCount: Int = 50) {
-    self.dateProvider = dateProvider
+    self.dateProvider  = dateProvider
     self.entryLifetime = entryLifetime
     wrapped.countLimit = maximumEntryCount
-    wrapped.delegate = keyTracker
+    wrapped.delegate   = keyTracker
 
   }
 
