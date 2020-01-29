@@ -64,34 +64,44 @@ final class CacheTests: XCTestCase {
 
   func testOverwriteValue() {
     // Given
-    let arrayFirst = ["first","second","third"]
-    let arraySecond = ["first","second","third"]
+    let first  = MockedTestObject()
+    let second = MockedTestObject.modifiedObject(count: 1)
 
-    let key = "first"
-    let store = Cache<String,[String]>()
+    let store = Cache<String,MockedTestObject>()
 
     // When
-    store.insert(arrayFirst, forKey: key)
-    store.insert(arraySecond, forKey: key)
+    store.insert(first, forKey: first.id)
 
     // Then
-    let result = store[key]
-    XCTAssertEqual(result, arraySecond)
+    guard let result: MockedTestObject = store[first.id] else {
+      XCTFail()
+      return
+    }
+    XCTAssertEqual(result.count, 7)
+
+    // When
+    store.insert(second, forKey: second.id)
+
+    // Then
+    guard let secondResult: MockedTestObject = store[second.id] else {
+      XCTFail()
+      return
+    }
+    XCTAssertEqual(secondResult.count, 1)
   }
 
   func testEntryExpired(){
     // Given
-    let arrayFirst = ["first","second","third"]
+    let object = MockedTestObject()
 
-    let key = "first"
-    let store = Cache<String,[String]>(entryLifetime: -100)
+    let store = Cache<String,MockedTestObject>(entryLifetime: -100)
 
     // When
-    store.insert(arrayFirst, forKey: key)
+    store.insert(object, forKey: object.id)
 
     // Then
-    let result = store[key]
-    XCTAssertEqual(result, nil)
+    let secondResult = store[object.id]
+    XCTAssertEqual(secondResult, nil)
   }
 
   func testEmptyValue() {
@@ -108,11 +118,7 @@ final class CacheTests: XCTestCase {
   }
 
   func testExpiredCache() {
-
-  }
-
-  func testMultipleSaves() {
-
+    //TODO: Do this
   }
 
   func testRemoveValue() {
