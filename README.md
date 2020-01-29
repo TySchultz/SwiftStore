@@ -65,7 +65,15 @@ Many apps do not need an expansive database for managing the data. An efficent i
 **Example** 😊
 
 ```swift
-put example here 
+  let name  = "SwiftStore"
+  let key   = "key"
+  let store = Cache<String,String>()
+  store.insert(name, forKey: key)
+
+  // Then
+  let result = store[test.id]
+  // or 
+  let result = store.value(forKey:key)
 ```
 
 ## Installation

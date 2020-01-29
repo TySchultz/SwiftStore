@@ -209,7 +209,6 @@ final class CacheTests: XCTestCase {
 
   }
 
-
   func testSaveToDiskWrongPassword() {
     // Given
     let generatedPassword = AES256CBC.generatePassword()
