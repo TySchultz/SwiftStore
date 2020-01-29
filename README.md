@@ -39,9 +39,8 @@ Many apps do not need an expansive database for managing the data. An efficent i
 
 * [x] Implement expiration for `entryLifetime`
 * [x] add `createdDate` for `Entry` 
-* [ ] encryption 
+* [x] encryption 
     - Encrypt / decrypt the data object itself: https://stackoverflow.com/a/53246008
-* [ ] pass in encryption policy or encryption provider 
 
 #### Structure 
 * [ ] Unit Tests - Full Code Coverage
@@ -59,6 +58,8 @@ Many apps do not need an expansive database for managing the data. An efficent i
     - what happens when trying to insert past the count limit 
 * [ ] Create a protocol describing behavior based on caching events 
     - for example, a callback for expired data or callback for successfully retrieving from cache 
+* [ ] pass in encryption policy or encryption provider 
+
 
 ## At a Glance
 
