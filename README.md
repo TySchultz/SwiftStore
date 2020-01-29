@@ -6,7 +6,6 @@
 ![PM](https://img.shields.io/badge/swiftpm-compatible-brightgreen.svg?style=flat)
 ![Swift](https://img.shields.io/badge/Swift-5.0-orange.svg)
 [![CI Status](https://img.shields.io/travis/mdetrick-onesky/Cache.svg?style=flat)](https://travis-ci.org/mdetrick-onesky/Cache)
-[![Version](https://img.shields.io/cocoapods/v/Cache.svg?style=flat)](https://cocoapods.org/pods/Cache)
 [![License](https://img.shields.io/cocoapods/l/Cache.svg?style=flat)](https://cocoapods.org/pods/Cache)
 [![Platform](https://img.shields.io/cocoapods/p/Cache.svg?style=flat)](https://cocoapods.org/pods/Cache)
 
