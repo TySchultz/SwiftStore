@@ -37,7 +37,7 @@ Many apps do not need an expansive database for managing the data. An efficent i
 
 ## TODO 
 
-[x]Implement expiration for `entryLifetime`
+* [x] Implement expiration for `entryLifetime`
 [x] add `createdDate` for `Entry` 
 [ ] encryption 
     - Encrypt / decrypt the data object itself: https://stackoverflow.com/a/53246008
