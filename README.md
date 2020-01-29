@@ -3,11 +3,15 @@
 
 # SwiftStore
 
-![PM](https://img.shields.io/badge/swiftpm-compatible-brightgreen.svg?style=flat)
+
+<p align="center">
+  ![PM](https://img.shields.io/badge/swiftpm-compatible-brightgreen.svg?style=flat)
 ![Swift](https://img.shields.io/badge/Swift-5.0-orange.svg)
 [![CI Status](https://img.shields.io/travis/mdetrick-onesky/Cache.svg?style=flat)](https://travis-ci.org/mdetrick-onesky/Cache)
 [![License](https://img.shields.io/cocoapods/l/Cache.svg?style=flat)](https://cocoapods.org/pods/Cache)
 [![Platform](https://img.shields.io/cocoapods/p/Cache.svg?style=flat)](https://cocoapods.org/pods/Cache)
+
+</p>
 
 
 Lightweight Caching Library for Swift. Inspired by [Swift By Sundell](https://www.swiftbysundell.com/articles/caching-in-swift/).
