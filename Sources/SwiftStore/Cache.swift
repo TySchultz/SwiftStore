@@ -1,4 +1,5 @@
 import Foundation
+import AES256CBC
 
 final public class Cache<Key: Hashable, Value> {
   private let wrapped = NSCache<WrappedKey, Entry>()
@@ -176,6 +177,7 @@ extension Cache where Key: Codable, Value: Codable {
     ) throws {
     let fileURL = folderURL.appendingPathComponent(name + ".cache")
     let data = try JSONEncoder().encode(self)
+
     try data.write(to: fileURL)
   }
   

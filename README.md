@@ -34,6 +34,32 @@ Many apps do not need an expansive database for managing the data. An efficent i
 * 🎯 Lightweight and easy to use.
 * 🎨 Create Custom Modifiers.
 
+
+## TODO 
+
+[x] Implement expiration for `entryLifetime`
+[x] add `createdDate` for `Entry` 
+[ ] encryption 
+    - Encrypt / decrypt the data object itself: https://stackoverflow.com/a/53246008
+[ ] pass in encryption policy or encryption provider 
+
+#### Structure 
+[ ] Unit Tests - Full Code Coverage
+[x] Github repo 
+[x] Swift Package Support 
+
+#### Nice to have 
+
+[ ] add policyTracker 
+    - Policys for how entries are inserted/retrieved  
+[ ] Cache `status` property (e.g. fresh, expired) 
+[ ] Expiration callback on cache load 
+[ ] Allow retrieving objects based on predicates 
+[ ] implement countlimit 
+    - what happens when trying to insert past the count limit 
+[ ] Create a protocol describing behavior based on caching events 
+    - for example, a callback for expired data or callback for successfully retrieving from cache 
+
 ## At a Glance
 
 **Example** 😊
