@@ -2,7 +2,6 @@
 ![Logo](./SwiftStoreLogo@2x.png)
 
 # SwiftStore
-Lightweight Caching Library
 
 ![PM](https://img.shields.io/badge/swiftpm-compatible-brightgreen.svg?style=flat)
 ![Swift](https://img.shields.io/badge/Swift-5.0-orange.svg)
