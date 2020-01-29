@@ -3,7 +3,7 @@
     "pins": [
       {
         "package": "AES256CBC",
-        "repositoryURL": "https://github.com/SwiftyBeaver/AES256CBC.git",
+        "repositoryURL": "https://github.com/SwiftyBeaver/AES256CBC",
         "state": {
           "branch": null,
           "revision": "15a500d3934eb3892d7a02060956597922f8baa9",

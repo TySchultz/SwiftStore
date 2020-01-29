@@ -6,15 +6,15 @@ final public class Cache<Key: Hashable, Value> {
   private let dateProvider: () -> Date
   private let entryLifetime: TimeInterval
   private let keyTracker = KeyTracker()
-  
+
+
   public init(dateProvider: @escaping () -> Date = Date.init,
        entryLifetime: TimeInterval = 12 * 60 * 60,
        maximumEntryCount: Int = 50) {
-    self.dateProvider  = dateProvider
-    self.entryLifetime = entryLifetime
-    wrapped.countLimit = maximumEntryCount
-    wrapped.delegate   = keyTracker
-
+    self.dateProvider       = dateProvider
+    self.entryLifetime      = entryLifetime
+    wrapped.countLimit      = maximumEntryCount
+    wrapped.delegate        = keyTracker
   }
 
   // Add
@@ -33,7 +33,7 @@ final public class Cache<Key: Hashable, Value> {
     guard let entry = wrapped.object(forKey: WrappedKey(key)) else {
       return nil
     }
-    
+
     guard dateProvider() < entry.expirationDate else {
       // Discard values that have expired
       removeValue(forKey: key)
@@ -173,21 +173,45 @@ extension Cache: Codable where Key: Codable, Value: Codable {
 extension Cache where Key: Codable, Value: Codable {
   func saveToDisk(
     as name: String,
-    at folderURL: URL = FileManager.default.temporaryDirectory
+    at folderURL: URL = FileManager.default.temporaryDirectory,
+    password: String
     ) throws {
     let fileURL = folderURL.appendingPathComponent(name + ".cache")
     let data = try JSONEncoder().encode(self)
-
-    try data.write(to: fileURL)
+    guard let encryptedData = encryptData(data: data, password: password) else {
+      return
+    }
+    try encryptedData.write(to: fileURL)
   }
   
   class func loadFromDisk(
     for name: String,
-    at folderURL: URL = FileManager.default.temporaryDirectory
-    ) throws -> Self {
+    at folderURL: URL = FileManager.default.temporaryDirectory,
+    password: String
+  ) throws -> Self {
     let fileURL = folderURL.appendingPathComponent(name + ".cache")
     let data = try Data(contentsOf: fileURL)
-    return try JSONDecoder().decode(self, from: data)
+    guard let decryptedData = decryptData(data: data, password: password) else {
+      return Cache<Key, Value>() as! Self
+    }
+    return try JSONDecoder().decode(self, from: decryptedData)
+  }
+
+  private func encryptData(data: Data, password: String) -> Data? {
+    // get AES-256 CBC encrypted string
+    guard let encryptedString = AES256CBC.encryptString(data.base64EncodedString(), password: password) else {
+      return nil
+    }
+    return Data(base64Encoded: encryptedString)
+  }
+
+  class func decryptData(data: Data, password: String) -> Data? {
+    // decrypt AES-256 CBC encrypted string
+    let encryptedDataString = data.base64EncodedString()
+    guard let decryptedDataString = AES256CBC.decryptString(encryptedDataString, password: password) else {
+      return nil
+    }
+    return Data(base64Encoded: decryptedDataString)
   }
 }
 

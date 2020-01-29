@@ -1,6 +1,6 @@
 import XCTest
 @testable import SwiftStore
-
+import AES256CBC
 final class CacheTests: XCTestCase {
 
   static var allTests = [
@@ -30,6 +30,8 @@ final class CacheTests: XCTestCase {
       return testObject
     }
   }
+
+  // MARK: Basic Operations
 
   func testSingleSave() {
     // Given
@@ -118,6 +120,9 @@ final class CacheTests: XCTestCase {
     //TODO: Do this
   }
 
+
+  // MARK: Removal
+
   func testRemoveValue() {
     // Given
     let object = MockedTestObject()
@@ -162,6 +167,78 @@ final class CacheTests: XCTestCase {
     let emptyResultSecond = store[second.id]
     XCTAssertEqual(emptyResultFirst, nil)
     XCTAssertEqual(emptyResultSecond, nil)
+  }
+
+  // MARK: Persistance
+
+  func testSaveToDisk() {
+    // Given
+    let generatedPassword = AES256CBC.generatePassword()
+    let test = MockedTestObject()
+    let store = Cache<String,MockedTestObject>()
+
+    // When
+    store.insert(test, forKey: test.id)
+    try! store.saveToDisk(as: "MainCache", password: generatedPassword)
+
+    let newStore = try! Cache<String,MockedTestObject>.loadFromDisk(for: "MainCache", password: generatedPassword)
+    // Then
+    let result = newStore[test.id]
+    XCTAssertEqual(result, test)
+  }
+
+  func testSaveToDiskWrongName() {
+    // Given
+    let generatedPassword = AES256CBC.generatePassword()
+    let test = MockedTestObject()
+    let store = Cache<String,MockedTestObject>()
+
+    // When
+    store.insert(test, forKey: test.id)
+    try! store.saveToDisk(as: "MainCache", password: generatedPassword)
+
+    // Then
+    do {
+      // Cache Initalization should fail
+      let _ = try Cache<String,MockedTestObject>.loadFromDisk(for: "WrongCache", password: generatedPassword)
+      XCTFail()
+    } catch {
+
+    }
+    XCTAssert(true)
+
+  }
+
+
+  func testSaveToDiskWrongPassword() {
+    // Given
+    let generatedPassword = AES256CBC.generatePassword()
+    let test = MockedTestObject()
+    let store = Cache<String,MockedTestObject>()
+
+    // When
+    store.insert(test, forKey: test.id)
+    try! store.saveToDisk(as: "MainCache", password: generatedPassword)
+
+    let newStore = try! Cache<String,MockedTestObject>.loadFromDisk(for: "MainCache", password: AES256CBC.generatePassword())
+    // Then
+    let result = newStore[test.id]
+    XCTAssertEqual(result, nil)
+  }
+
+  func testLoadDiskEmpty() {
+    // Given
+
+    // When
+    do {
+      // Cache Initalization should fail
+      let _ = try Cache<String,MockedTestObject>.loadFromDisk(for: "Cache",
+                                                              password: AES256CBC.generatePassword())
+      XCTFail()
+    } catch {
+
+    }
+    XCTAssert(true)
   }
 
 }
