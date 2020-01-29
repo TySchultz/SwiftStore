@@ -18,7 +18,7 @@ final public class Cache<Key: Hashable, Value> {
 
   // Add
 
-  func insert(_ value: Value, forKey key: Key) {
+  public func insert(_ value: Value, forKey key: Key) {
     let date       = dateProvider()
     let expiration = date.addingTimeInterval(entryLifetime)
     let entry      = Entry(key: key, value: value, expirationDate: expiration, createdDate: date)
@@ -28,7 +28,7 @@ final public class Cache<Key: Hashable, Value> {
 
   // Retrieval
   
-  func value(forKey key: Key) -> Value? {
+  public func value(forKey key: Key) -> Value? {
     guard let entry = wrapped.object(forKey: WrappedKey(key)) else {
       return nil
     }
@@ -42,7 +42,7 @@ final public class Cache<Key: Hashable, Value> {
     return entry.value
   }
 
-  func values() -> [Value] {
+  public func values() -> [Value] {
     var values:[Value] = []
     for key in keyTracker.keys {
       if let entry = value(forKey: key) {
@@ -54,11 +54,11 @@ final public class Cache<Key: Hashable, Value> {
 
   // Remove
 
-  func removeValue(forKey key: Key) {
+  public func removeValue(forKey key: Key) {
     wrapped.removeObject(forKey: WrappedKey(key))
   }
 
-  func removeAll() {
+  public func removeAll() {
     for key in keyTracker.keys {
       removeValue(forKey: key)
     }
