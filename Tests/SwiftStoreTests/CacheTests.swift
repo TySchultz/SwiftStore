@@ -240,4 +240,91 @@ final class CacheTests: XCTestCase {
     XCTAssert(true)
   }
 
+  func testPerformanceOnSave() {
+    // Given
+    let range = 0...100
+    let objects: [MockedTestObject] = range.map { _ in MockedTestObject() }
+    let store = Cache<String, [MockedTestObject]>()
+    let now = Date()
+
+    // When
+    store.insert(objects, forKey: "key")
+
+      do {
+        try store.saveToDisk(as: "MainCache", password: AES256CBC.generatePassword())
+      } catch {
+        XCTFail()
+      }
+    let interval = Date().timeIntervalSince(now)
+    print("***" , Date().timeIntervalSince(now))
+    print("***" , interval / Double(range.count))
+
+
+    // Then
+    let result = store["key"]
+    XCTAssertEqual(result, objects)
+    XCTAssert(true)
+  }
+
+  func testPerformanceMultipleKeys() {
+    // Given
+    let generatedPassword = AES256CBC.generatePassword()
+    let range = 0...1000
+    let objects: [MockedTestObject] = range.map { index in
+      return MockedTestObject.modifiedObject(id: String(index))
+    }
+    let store = Cache<String, MockedTestObject>()
+    let now = Date()
+
+    // When
+    for object in objects {
+      store.insert(object, forKey: object.id)
+      do {
+        try store.saveToDisk(as: "SecondCache", password: generatedPassword)
+      } catch {
+        XCTFail()
+      }
+    }
+
+    let interval = Date().timeIntervalSince(now)
+    print("***" , Date().timeIntervalSince(now))
+    print("***" , interval / Double(range.count))
+
+    // Then
+    XCTAssert(true)
+  }
+
+  func testPerformanceSavingWithoutEncryption() {
+    // Given
+    let range = 0...100000
+    let objects: [MockedTestObject] = range.map { _ in MockedTestObject() }
+    let store = Cache<String, [MockedTestObject]>()
+    let now = Date()
+
+    // When
+    store.insert(objects, forKey: "key")
+
+    do {
+      try store.saveToDisk(as: "MainCache", password: AES256CBC.generatePassword(), encrypted: false)
+    } catch {
+      XCTFail()
+    }
+
+    let interval = Date().timeIntervalSince(now)
+    print("***" , Date().timeIntervalSince(now))
+    print("***" , interval / Double(range.count))
+
+    // Then
+    XCTAssert(true)
+  }
+
+//  func testPerformanceManySaves() {
+//
+//
+//    for object in objects {
+//      insert
+//      ssave
+//    }
+//  }
+
 }

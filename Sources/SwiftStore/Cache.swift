@@ -174,10 +174,15 @@ extension Cache where Key: Codable, Value: Codable {
   func saveToDisk(
     as name: String,
     at folderURL: URL = FileManager.default.temporaryDirectory,
-    password: String
-    ) throws {
+    password: String,
+    encrypted: Bool = true
+  ) throws {
     let fileURL = folderURL.appendingPathComponent(name + ".cache")
     let data = try JSONEncoder().encode(self)
+    guard encrypted else {
+      try data.write(to: fileURL)
+      return
+    }
     guard let encryptedData = encryptData(data: data, password: password) else {
       return
     }
@@ -188,6 +193,7 @@ extension Cache where Key: Codable, Value: Codable {
     for name: String,
     at folderURL: URL = FileManager.default.temporaryDirectory,
     password: String
+
   ) throws -> Self {
     let fileURL = folderURL.appendingPathComponent(name + ".cache")
     let data = try Data(contentsOf: fileURL)
