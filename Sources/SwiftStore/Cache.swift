@@ -171,7 +171,7 @@ extension Cache: Codable where Key: Codable, Value: Codable {
 }
 
 extension Cache where Key: Codable, Value: Codable {
-  func saveToDisk(
+  public func saveToDisk(
     as name: String,
     at folderURL: URL = FileManager.default.temporaryDirectory,
     password: String,
@@ -189,7 +189,7 @@ extension Cache where Key: Codable, Value: Codable {
     try encryptedData.write(to: fileURL)
   }
   
-  class func loadFromDisk(
+  public class func loadFromDisk(
     for name: String,
     at folderURL: URL = FileManager.default.temporaryDirectory,
     password: String
