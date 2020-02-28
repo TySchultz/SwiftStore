@@ -172,10 +172,10 @@ extension Cache: Codable where Key: Codable, Value: Codable {
 
 extension Cache where Key: Codable, Value: Codable {
   public func saveToDisk(
-    as name: String,
+    cacheName name: String,
     at folderURL: URL = FileManager.default.temporaryDirectory,
-    password: String,
-    encrypted: Bool = true
+    password: String = "",
+    encrypted: Bool = false
   ) throws {
     let fileURL = folderURL.appendingPathComponent(name + ".cache")
     let data = try JSONEncoder().encode(self)
@@ -192,15 +192,22 @@ extension Cache where Key: Codable, Value: Codable {
   public class func loadFromDisk(
     for name: String,
     at folderURL: URL = FileManager.default.temporaryDirectory,
-    password: String
-
+    password: String? = nil
   ) throws -> Self {
-    let fileURL = folderURL.appendingPathComponent(name + ".cache")
-    let data = try Data(contentsOf: fileURL)
-    guard let decryptedData = decryptData(data: data, password: password) else {
-      return Cache<Key, Value>() as! Self
+    if let pass = password {
+      // Encrypted Data
+      let fileURL = folderURL.appendingPathComponent(name + ".cache")
+      let data = try Data(contentsOf: fileURL)
+      guard let decryptedData = decryptData(data: data, password: pass) else {
+        return Cache<Key, Value>() as! Self
+      }
+      return try JSONDecoder().decode(self, from: decryptedData)
+    } else {
+      // Non Encrypted Data
+      let fileURL = folderURL.appendingPathComponent(name + ".cache")
+      let data = try Data(contentsOf: fileURL)
+      return try JSONDecoder().decode(self, from: data)
     }
-    return try JSONDecoder().decode(self, from: decryptedData)
   }
 
   private func encryptData(data: Data, password: String) -> Data? {

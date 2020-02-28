@@ -179,7 +179,7 @@ final class CacheTests: XCTestCase {
 
     // When
     store.insert(test, forKey: test.id)
-    try! store.saveToDisk(as: "MainCache", password: generatedPassword)
+    try! store.saveToDisk(cacheName: "MainCache", password: generatedPassword, encrypted: true)
 
     let newStore = try! Cache<String,MockedTestObject>.loadFromDisk(for: "MainCache", password: generatedPassword)
     // Then
@@ -195,7 +195,7 @@ final class CacheTests: XCTestCase {
 
     // When
     store.insert(test, forKey: test.id)
-    try! store.saveToDisk(as: "MainCache", password: generatedPassword)
+    try! store.saveToDisk(cacheName: "MainCache", password: generatedPassword)
 
     // Then
     do {
@@ -217,7 +217,7 @@ final class CacheTests: XCTestCase {
 
     // When
     store.insert(test, forKey: test.id)
-    try! store.saveToDisk(as: "MainCache", password: generatedPassword)
+    try! store.saveToDisk(cacheName: "MainCache", password: generatedPassword)
 
     let newStore = try! Cache<String,MockedTestObject>.loadFromDisk(for: "MainCache", password: AES256CBC.generatePassword())
     // Then
@@ -240,6 +240,23 @@ final class CacheTests: XCTestCase {
     XCTAssert(true)
   }
 
+  func testLoadDiskNoPasswords() {
+    // Given
+    let test = MockedTestObject()
+    let store = Cache<String,MockedTestObject>()
+
+    // When
+    store.insert(test, forKey: test.id)
+    try! store.saveToDisk(cacheName: "MainCache")
+
+    let newStore = try! Cache<String,MockedTestObject>.loadFromDisk(for: "MainCache")
+
+    // Then
+    let result = newStore[test.id]
+    XCTAssertEqual(result, test)
+
+  }
+
   func testPerformanceOnSave() {
     // Given
     let range = 0...100
@@ -251,7 +268,7 @@ final class CacheTests: XCTestCase {
     store.insert(objects, forKey: "key")
 
       do {
-        try store.saveToDisk(as: "MainCache", password: AES256CBC.generatePassword())
+        try store.saveToDisk(cacheName: "MainCache", password: AES256CBC.generatePassword())
       } catch {
         XCTFail()
       }
