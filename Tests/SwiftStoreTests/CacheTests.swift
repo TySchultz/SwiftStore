@@ -1,6 +1,5 @@
 import XCTest
 @testable import SwiftStore
-import AES256CBC
 final class CacheTests: XCTestCase {
 
   static var allTests = [
@@ -61,6 +60,28 @@ final class CacheTests: XCTestCase {
     let secondResult = store[second.id]
     XCTAssertEqual(firstResult, first)
     XCTAssertEqual(secondResult, second)
+  }
+
+  func testSavingMultipleValuesInArray() {
+    // Given
+    let first  = MockedTestObject()
+    let second = MockedTestObject.modifiedObject(id: "second")
+    let store  = Cache<String,[MockedTestObject]>()
+
+    // When
+    store.insert([first,second], forKey: "testID")
+
+    guard var objects = store.value(forKey: "testID") else {
+      XCTFail()
+      return
+    }
+    let third = MockedTestObject.modifiedObject(id: "second", count: 8)
+    objects.append(third)
+    store.insert(objects, forKey: "testID")
+
+    // Then
+    let firstResult  = store["testID"]
+    XCTAssertEqual(firstResult, [first,second])
   }
 
   func testOverwriteValue() {
@@ -173,15 +194,15 @@ final class CacheTests: XCTestCase {
 
   func testSaveToDisk() {
     // Given
-    let generatedPassword = AES256CBC.generatePassword()
+//    let generatedPassword = AES256CBC.generatePassword()
     let test = MockedTestObject()
     let store = Cache<String,MockedTestObject>()
 
     // When
     store.insert(test, forKey: test.id)
-    try! store.saveToDisk(cacheName: "MainCache", password: generatedPassword, encrypted: true)
+    try! store.saveToDisk(cacheName: "MainCache")
 
-    let newStore = try! Cache<String,MockedTestObject>.loadFromDisk(for: "MainCache", password: generatedPassword)
+    let newStore = try! Cache<String,MockedTestObject>.loadFromDisk(for: "MainCache")
     // Then
     let result = newStore[test.id]
     XCTAssertEqual(result, test)
@@ -189,18 +210,18 @@ final class CacheTests: XCTestCase {
 
   func testSaveToDiskWrongName() {
     // Given
-    let generatedPassword = AES256CBC.generatePassword()
+//    let generatedPassword = AES256CBC.generatePassword()
     let test = MockedTestObject()
     let store = Cache<String,MockedTestObject>()
 
     // When
     store.insert(test, forKey: test.id)
-    try! store.saveToDisk(cacheName: "MainCache", password: generatedPassword)
+    try! store.saveToDisk(cacheName: "MainCache")
 
     // Then
     do {
       // Cache Initalization should fail
-      let _ = try Cache<String,MockedTestObject>.loadFromDisk(for: "WrongCache", password: generatedPassword)
+      let _ = try Cache<String,MockedTestObject>.loadFromDisk(for: "WrongCache")
       XCTFail()
     } catch {
 
@@ -211,15 +232,15 @@ final class CacheTests: XCTestCase {
 
   func testSaveToDiskWrongPassword() {
     // Given
-    let generatedPassword = AES256CBC.generatePassword()
+//    let generatedPassword = AES256CBC.generatePassword()
     let test = MockedTestObject()
     let store = Cache<String,MockedTestObject>()
 
     // When
     store.insert(test, forKey: test.id)
-    try! store.saveToDisk(cacheName: "MainCache", password: generatedPassword)
+    try! store.saveToDisk(cacheName: "MainCache")
 
-    let newStore = try! Cache<String,MockedTestObject>.loadFromDisk(for: "MainCache", password: AES256CBC.generatePassword())
+    let newStore = try! Cache<String,MockedTestObject>.loadFromDisk(for: "MainCache")
     // Then
     let result = newStore[test.id]
     XCTAssertEqual(result, nil)
@@ -231,8 +252,7 @@ final class CacheTests: XCTestCase {
     // When
     do {
       // Cache Initalization should fail
-      let _ = try Cache<String,MockedTestObject>.loadFromDisk(for: "Cache",
-                                                              password: AES256CBC.generatePassword())
+      let _ = try Cache<String,MockedTestObject>.loadFromDisk(for: "Cache")
       XCTFail()
     } catch {
 
@@ -268,7 +288,7 @@ final class CacheTests: XCTestCase {
     store.insert(objects, forKey: "key")
 
       do {
-        try store.saveToDisk(cacheName: "MainCache", password: AES256CBC.generatePassword())
+        try store.saveToDisk(cacheName: "MainCache")
       } catch {
         XCTFail()
       }
